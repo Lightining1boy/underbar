@@ -363,14 +363,16 @@
   // instead if possible.
   _.memoize = function (func) {
     var results = {};
-    if (results[func] === undefined) {
-      results[func] = func;
-      console.log(results[func] = func())
-      return func;
-    } else {
-      return results[func];
+    return function () {  //(1,2)
+      var args = [...arguments];
+      if (results[JSON.stringify(args)] === undefined) {
+        var value = func.apply(null, args);
+        results[JSON.stringify(args)] = value;
+        return results[JSON.stringify(args)];
+      } else {
+        return results[JSON.stringify(args)];
+      }
     }
-
   };
 
   // Delays a function for the given number of milliseconds, and then calls
